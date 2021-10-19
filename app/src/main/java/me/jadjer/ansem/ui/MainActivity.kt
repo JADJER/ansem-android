@@ -1,9 +1,10 @@
-package me.jadjer.ansem
+package me.jadjer.ansem.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import me.jadjer.ansem.R
 
 
 class MainActivity : AppCompatActivity() {

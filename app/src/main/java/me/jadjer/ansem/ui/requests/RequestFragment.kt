@@ -1,4 +1,4 @@
-package me.jadjer.ansem.ui
+package me.jadjer.ansem.ui.requests
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import me.jadjer.ansem.MyRequestRecyclerViewAdapter
 import me.jadjer.ansem.R
 import me.jadjer.ansem.placeholder.PlaceholderContent
 
