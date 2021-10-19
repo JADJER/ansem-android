@@ -1,20 +1,20 @@
 package me.jadjer.ansem.ui.splash
 
-import android.content.Context
-import android.content.pm.PackageManager
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
+import me.jadjer.ansem.data.repository.AccountRepository
 
-class SplashViewModel(private val context: Context) : ViewModel() {
 
-    private fun PackageManager.missingSystemFeature(name: String): Boolean = !hasSystemFeature(name)
+class SplashViewModel(private val repo: AccountRepository) : ViewModel() {
 
-    fun checkSupportBLE() : Boolean {
-        val packageManager = context.packageManager
+    fun isAuth(): Boolean {
+        val userData = Bundle()
+        userData.putString("UserID", "25")
 
-        if (packageManager.missingSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            return false
-        }
+        repo.registration("jadjer", "Alchogol01", userData)
 
-        return true
+        val account = repo.get()
+
+        return account != null
     }
 }

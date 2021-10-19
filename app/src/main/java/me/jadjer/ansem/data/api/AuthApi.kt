@@ -15,7 +15,6 @@ interface AuthApi {
         @Field("username") username: String,
         @Field("email") email: String,
         @Field("password") password: String,
-        @Field("c_password") password_again: String,
     ): ResponseWrapper<Registration>
 
     @Headers("Accept: application/json")
