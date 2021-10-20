@@ -1,4 +1,4 @@
-package me.jadjer.ansem.ui.requests
+package me.jadjer.ansem.ui.request_list
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import me.jadjer.ansem.placeholder.PlaceholderContent.PlaceholderItem
-import me.jadjer.ansem.databinding.FragmentRequestBinding
+import me.jadjer.ansem.databinding.FragmentRequestItemBinding
 
 /**
  * [RecyclerView.Adapter] that can display a [PlaceholderItem].
@@ -19,7 +19,7 @@ class MyRequestRecyclerViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         return ViewHolder(
-            FragmentRequestBinding.inflate(
+            FragmentRequestItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -36,7 +36,7 @@ class MyRequestRecyclerViewAdapter(
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(binding: FragmentRequestBinding) :
+    inner class ViewHolder(binding: FragmentRequestItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val idView: TextView = binding.itemNumber
         val contentView: TextView = binding.content

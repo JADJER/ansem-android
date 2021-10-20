@@ -1,23 +1,18 @@
 package me.jadjer.ansem.data.repository
 
-import android.R.attr
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+
 import me.jadjer.ansem.data.ACCOUNT_TYPE
 import me.jadjer.ansem.data.TOKEN_TYPE_ACCESS
-import me.jadjer.ansem.data.model.repository.MotoAccount
-import android.R.attr.data
-
-import android.R.attr.password
-
-import android.content.Intent
+import me.jadjer.ansem.data.api.AuthApi
+import me.jadjer.ansem.data.model.api.Auth
 
 
-
-
-class AccountRepositoryImpl(context: Context) : AccountRepository {
+class AccountRepositoryImpl(context: Context, private val authApi: AuthApi) : AccountRepository {
 
     private var accountManager: AccountManager = AccountManager.get(context)
     private var account: Account? = null
@@ -45,16 +40,25 @@ class AccountRepositoryImpl(context: Context) : AccountRepository {
         return account
     }
 
-    override fun registration(username: String, pass: String, data: Bundle?): Account {
+    override suspend fun registration(username: String, pass: String, data: Bundle?): Boolean {
         val account = Account(username, ACCOUNT_TYPE)
 
-//        accountManager.addAccountExplicitly(account, pass, data)
+        accountManager.addAccountExplicitly(account, pass, data)
 
-        return account
+        return true
     }
 
-    override fun login(username: String, pass: String): Account? {
-        TODO("Not yet implemented")
+    override suspend fun login(username: String, pass: String): Boolean {
+        return try {
+            val response = authApi.auth(Auth(username, pass))
+            Log.d("AccountRepository", "Auth complete")
+            token = response.access_token
+            true
+
+        } catch (exception: Exception) {
+            Log.d("AccountRepository", "Auth failed")
+            false
+        }
     }
 
     override fun logout() {

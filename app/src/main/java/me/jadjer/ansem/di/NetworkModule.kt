@@ -1,6 +1,8 @@
 package me.jadjer.ansem.di
 
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.tls.HandshakeCertificates
 import okhttp3.tls.decodeCertificatePem
@@ -67,15 +69,26 @@ fun provideSslOkhttpClient(): OkHttpClient {
         .addTrustedCertificate(certificateAuthority)
         .build()
 
-    return OkHttpClient.Builder()
+    val httpClient = OkHttpClient.Builder()
         .addInterceptor(interceptor)
+        .addInterceptor { chain ->
+            val original = chain.request()
+
+            // Request customization: add request headers
+            val requestBuilder = original.newBuilder()
+                .header("Authorization", "MY_API_KEY") // <-- this is the important line
+
+            val request = requestBuilder.build()
+            chain.proceed(request)
+        }
         .sslSocketFactory(certificates.sslSocketFactory(), certificates.trustManager)
-        .build()
+
+    return httpClient.build()
 }
 
 fun provideRetrofit(client: OkHttpClient): Retrofit {
     return Retrofit.Builder()
-        .baseUrl("https://jadjer.pythonanywhere.com/")
+        .baseUrl("https://jadjer.pythonanywhere.com/api/v1/")
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()

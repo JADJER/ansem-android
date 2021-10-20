@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-import me.jadjer.ansem.data.LoginRepository
-import me.jadjer.ansem.data.Result
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 import me.jadjer.ansem.R
+import me.jadjer.ansem.data.repository.AccountRepository
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel(private val accountRepository: AccountRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -17,15 +18,18 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
-        // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
 
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+    fun login(username: String, password: String) {
+        viewModelScope.launch {
+            val result = accountRepository.login(username, password)
+            if (result) {
+                _loginResult.value =
+//                    LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                    LoginResult(success = LoggedInUserView(displayName = "Test"))
+
+            } else {
+                _loginResult.value = LoginResult(error = R.string.login_failed)
+            }
         }
     }
 
