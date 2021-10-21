@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/moto_nav_graph"
+    app:startDestination="@id/requestListFragment">
+    <fragment
+        android:id="@+id/requestListFragment"
+        android:name="me.jadjer.ansem.ui.request_list.RequestListFragment"
+        android:label="fragment_request_list"
+        tools:layout="@layout/fragment_request_list" >
+        <action
+            android:id="@+id/action_requestListFragment_to_requestDetailFragment"
+            app:destination="@id/requestDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestDetailFragment"
+        android:name="me.jadjer.ansem.ui.request_detail.RequestDetailFragment"
+        android:label="fragment_request_detail"
+        tools:layout="@layout/fragment_request_detail" />
+</navigation>

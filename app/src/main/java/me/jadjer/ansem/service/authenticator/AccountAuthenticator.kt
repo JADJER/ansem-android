@@ -7,6 +7,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import me.jadjer.ansem.ui.MainActivity
+import me.jadjer.ansem.ui.authenticator.AuthActivity
+import me.jadjer.ansem.ui.login.LoginActivity
+import me.jadjer.ansem.ui.registration.RegistrationActivity
 
 class AccountAuthenticator(private val context: Context) : AbstractAccountAuthenticator(context) {
 
@@ -26,7 +29,7 @@ class AccountAuthenticator(private val context: Context) : AbstractAccountAuthen
     ): Bundle {
         Log.d("Auth", "addAccount")
 
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(context, RegistrationActivity::class.java)
         intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType)
         intent.putExtra(ADD_ACCOUNT, true)
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
@@ -77,7 +80,7 @@ class AccountAuthenticator(private val context: Context) : AbstractAccountAuthen
 //            return result
 //        }
         Log.d("Auth", "4")
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(context, LoginActivity::class.java)
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
         intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, account?.type)
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, account?.name)

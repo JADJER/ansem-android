@@ -1,4 +1,4 @@
-package me.jadjer.ansem.di
+package me.jadjer.ansem.app.di
 
 import me.jadjer.ansem.data.api.*
 import org.koin.dsl.module

@@ -1,4 +1,4 @@
-package me.jadjer.ansem.di
+package me.jadjer.ansem.app.di
 
 import android.content.Context
 import androidx.room.Room

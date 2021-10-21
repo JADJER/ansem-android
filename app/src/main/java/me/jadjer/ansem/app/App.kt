@@ -1,9 +1,9 @@
-package me.jadjer.ansem
+package me.jadjer.ansem.app
 
 import android.app.Application
 import org.koin.core.context.startKoin
 import org.koin.android.ext.koin.androidContext
-import me.jadjer.ansem.di.*
+import me.jadjer.ansem.app.di.*
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 
@@ -19,8 +19,7 @@ class App : Application() {
                 repositoryModule,
                 netModule,
                 apiModule,
-                databaseModule,
-                fragmentModule
+                databaseModule
             )
         }
     }

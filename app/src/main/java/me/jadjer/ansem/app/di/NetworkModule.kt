@@ -1,4 +1,4 @@
-package me.jadjer.ansem.di
+package me.jadjer.ansem.app.di
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

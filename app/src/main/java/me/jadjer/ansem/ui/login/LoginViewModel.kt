@@ -1,49 +1,49 @@
 package me.jadjer.ansem.ui.login
 
-import androidx.lifecycle.LiveData
+import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import android.util.Patterns
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 import me.jadjer.ansem.R
 import me.jadjer.ansem.data.repository.AccountRepository
+import me.jadjer.ansem.utils.Event
+import me.jadjer.ansem.utils.LoginFormState
 
 class LoginViewModel(private val accountRepository: AccountRepository) : ViewModel() {
 
-    private val _loginForm = MutableLiveData<LoginFormState>()
-    val loginFormState: LiveData<LoginFormState> = _loginForm
-
-    private val _loginResult = MutableLiveData<LoginResult>()
-    val loginResult: LiveData<LoginResult> = _loginResult
-
+    val loginFormState = MutableLiveData<LoginFormState>()
+    val loginEvent = MutableLiveData<Event<Boolean>>()
 
     fun login(username: String, password: String) {
-        viewModelScope.launch {
-            val result = accountRepository.login(username, password)
-            if (result) {
-                _loginResult.value =
-//                    LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-                    LoginResult(success = LoggedInUserView(displayName = "Test"))
+        loginEvent.value = Event.loading()
 
-            } else {
-                _loginResult.value = LoginResult(error = R.string.login_failed)
+        viewModelScope.launch {
+            val account = accountRepository.login(username, password)
+            if (account == null) {
+                loginEvent.value = Event.error("Authentication error")
             }
+
+            loginEvent.value = Event.success(true)
         }
     }
 
     fun loginDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
-        } else {
-            _loginForm.value = LoginFormState(isDataValid = true)
+            loginFormState.value = LoginFormState(usernameError = R.string.invalid_username)
+            return
         }
+
+        if (!isPasswordValid(password)) {
+            loginFormState.value = LoginFormState(passwordError = R.string.invalid_password)
+            return
+        }
+
+        loginFormState.value = LoginFormState(isDataValid = true)
     }
 
-    // A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
         return if (username.contains("@")) {
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
@@ -52,7 +52,6 @@ class LoginViewModel(private val accountRepository: AccountRepository) : ViewMod
         }
     }
 
-    // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }
