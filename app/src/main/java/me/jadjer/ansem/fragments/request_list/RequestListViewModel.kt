@@ -1,6 +1,5 @@
-package me.jadjer.ansem.ui.request_list
+package me.jadjer.ansem.fragments.request_list
 
-import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import me.jadjer.ansem.data.repository.AccountRepository
 

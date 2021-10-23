@@ -1,4 +1,4 @@
-package me.jadjer.ansem.ui.user
+package me.jadjer.ansem.fragments.user
 
 import androidx.lifecycle.ViewModel
 import me.jadjer.ansem.data.model.entity.User

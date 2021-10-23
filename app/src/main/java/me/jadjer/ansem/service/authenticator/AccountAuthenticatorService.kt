@@ -3,7 +3,7 @@ package me.jadjer.ansem.service.authenticator
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import org.koin.android.ext.android.inject
+import android.util.Log
 
 
 class AccountAuthenticatorService : Service() {

@@ -12,7 +12,7 @@ import me.jadjer.ansem.data.api.AuthApi
 import me.jadjer.ansem.data.model.api.Auth
 
 
-class AccountRepositoryImpl(context: Context, private val authApi: AuthApi) : AccountRepository {
+class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) : AccountRepository {
 
     private var accountManager: AccountManager = AccountManager.get(context)
     private var account: Account? = null
@@ -49,6 +49,14 @@ class AccountRepositoryImpl(context: Context, private val authApi: AuthApi) : Ac
     }
 
     override suspend fun login(username: String, pass: String): Boolean {
+        val am: AccountManager = AccountManager.get(context) // "this" references the current Context
+
+        val accounts: Array<out Account> = am.getAccountsByType("me.jadjer.ansem")
+
+        for(account in accounts){
+            Log.d("Account", "Item $account")
+        }
+
         return try {
             val response = authApi.auth(Auth(username, pass))
             Log.d("AccountRepository", "Auth complete")

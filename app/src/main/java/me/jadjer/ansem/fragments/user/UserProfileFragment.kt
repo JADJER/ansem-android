@@ -1,6 +1,5 @@
-package me.jadjer.ansem.ui.user
+package me.jadjer.ansem.fragments.user
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package me.jadjer.ansem.ui.request_detail
+package me.jadjer.ansem.fragments.request_detail
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle

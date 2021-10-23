@@ -1,4 +1,4 @@
-package me.jadjer.ansem.ui.request_list
+package me.jadjer.ansem.fragments.request_list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

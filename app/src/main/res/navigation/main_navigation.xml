@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/moto_nav_graph"
-    app:startDestination="@id/requestListFragment">
+    app:startDestination="@id/splashFragment">
     <fragment
         android:id="@+id/requestListFragment"
-        android:name="me.jadjer.ansem.ui.request_list.RequestListFragment"
+        android:name="me.jadjer.ansem.fragments.request_list.RequestListFragment"
         android:label="fragment_request_list"
         tools:layout="@layout/fragment_request_list" >
         <action
@@ -15,7 +15,40 @@
     </fragment>
     <fragment
         android:id="@+id/requestDetailFragment"
-        android:name="me.jadjer.ansem.ui.request_detail.RequestDetailFragment"
+        android:name="me.jadjer.ansem.fragments.request_detail.RequestDetailFragment"
         android:label="fragment_request_detail"
         tools:layout="@layout/fragment_request_detail" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="me.jadjer.ansem.fragments.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="me.jadjer.ansem.fragments.registration.RegistrationFragment"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_registrationFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="me.jadjer.ansem.fragments.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_requestListFragment"
+            app:destination="@id/requestListFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
 </navigation>

@@ -1,4 +1,4 @@
-package me.jadjer.ansem.ui.registration
+package me.jadjer.ansem.fragments.registration
 
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
