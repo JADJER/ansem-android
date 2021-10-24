@@ -17,36 +17,84 @@ class RegistrationViewModel(private val accountRepository: AccountRepository) : 
     val registerFormState = MutableLiveData<RegisterFormState>()
     val registrationEvent = MutableLiveData<Event<Boolean>>()
 
-    fun register(name: String, email: String, username: String, password: String) {
+    fun register(
+        email: String,
+        first_name: String,
+        last_name: String,
+        country: String,
+        city: String,
+        address: String,
+        mobile_no: String,
+        password: String,
+    ) {
         registrationEvent.value = Event.loading()
 
         viewModelScope.launch {
-            val bundle = Bundle()
-            bundle.putString("name", name)
-            bundle.putString("email", email)
+            val registerResult = accountRepository.register(
+                email = email,
+                password = password,
+                first_name = first_name,
+                last_name = last_name,
+                country = country,
+                city = city,
+                address = address,
+                mobile_no = mobile_no
+            )
 
-            val account = accountRepository.registration(username, password, bundle)
+            if (registerResult.error.isNotEmpty()) {
+                registrationEvent.value = Event.error(registerResult.error)
 
-            registrationEvent.value = Event.success(true)
+            } else {
+                registrationEvent.value = Event.success(true)
+            }
         }
     }
 
     fun registerDataChanged(
-        name: String, email: String, username: String, password: String, password_again: String
+        email: String,
+        first_name: String,
+        last_name: String,
+        country: String,
+        city: String,
+        address: String,
+        mobile_no: String,
+        password: String,
+        password_again: String
     ) {
-
-        if (!isNameValid(name)) {
-            registerFormState.value = RegisterFormState(nameError = R.string.invalid_name)
-            return
-        }
-
-        if (!isUserNameValid(username)) {
-            registerFormState.value = RegisterFormState(usernameError = R.string.invalid_username)
-            return
-        }
-
         if (!isEmailValid(email)) {
             registerFormState.value = RegisterFormState(emailError = R.string.invalid_email)
+            return
+        }
+
+        if (!isFieldNotEmpty(first_name)) {
+            registerFormState.value =
+                RegisterFormState(firstNameError = R.string.invalid_first_name)
+            return
+        }
+
+        if (!isFieldNotEmpty(last_name)) {
+            registerFormState.value = RegisterFormState(lastNameError = R.string.invalid_last_name)
+            return
+        }
+
+        if (!isFieldNotEmpty(country)) {
+            registerFormState.value = RegisterFormState(countryError = R.string.invalid_country)
+            return
+        }
+
+        if (!isFieldNotEmpty(city)) {
+            registerFormState.value = RegisterFormState(cityError = R.string.invalid_city)
+            return
+        }
+
+        if (!isFieldNotEmpty(address)) {
+            registerFormState.value = RegisterFormState(addressError = R.string.invalid_address)
+            return
+        }
+
+//        TODO Заменить проверку номера
+        if (!isFieldNotEmpty(mobile_no)) {
+            registerFormState.value = RegisterFormState(mobileNoError = R.string.invalid_mobile_no)
             return
         }
 
@@ -64,13 +112,8 @@ class RegistrationViewModel(private val accountRepository: AccountRepository) : 
         registerFormState.value = RegisterFormState(isDataValid = true)
     }
 
-    private fun isNameValid(name: String): Boolean {
-        return name.isNotBlank()
-    }
-
-    // A placeholder username validation check
-    private fun isUserNameValid(username: String): Boolean {
-        return username.isNotBlank()
+    private fun isFieldNotEmpty(field: String): Boolean {
+        return field.isNotBlank()
     }
 
     private fun isEmailValid(username: String): Boolean {

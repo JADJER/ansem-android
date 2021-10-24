@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         navController.setGraph(R.navigation.main_navigation)
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.label == "fragment_registration" || destination.label == "fragment_login") {
+            if (destination.id == R.id.loginFragment || destination.id == R.id.registrationFragment) {
                 navView.visibility = View.GONE
             } else {
                 navView.visibility = View.VISIBLE
@@ -43,7 +43,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.requestListFragment, R.id.loginFragment)
+            setOf(
+                R.id.requestListFragment,
+                R.id.loginFragment,
+                R.id.userProfileFragment
+            )
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)

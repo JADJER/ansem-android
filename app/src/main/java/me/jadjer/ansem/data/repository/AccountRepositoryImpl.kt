@@ -9,10 +9,14 @@ import android.util.Log
 import me.jadjer.ansem.data.ACCOUNT_TYPE
 import me.jadjer.ansem.data.TOKEN_TYPE_ACCESS
 import me.jadjer.ansem.data.api.AuthApi
-import me.jadjer.ansem.data.model.api.Auth
+import me.jadjer.ansem.data.model.api.Login
+import me.jadjer.ansem.data.model.api.LoginResult
+import me.jadjer.ansem.data.model.api.Register
+import me.jadjer.ansem.data.model.api.RegisterResult
 
 
-class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) : AccountRepository {
+class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) :
+    AccountRepository {
 
     private var accountManager: AccountManager = AccountManager.get(context)
     private var account: Account? = null
@@ -40,23 +44,53 @@ class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) 
         return account
     }
 
-    override suspend fun registration(username: String, pass: String, data: Bundle?): Account? {
-        val account = Account(username, ACCOUNT_TYPE)
-
-        accountManager.addAccountExplicitly(account, pass, data)
-
-        return null
-    }
-
-    override suspend fun login(username: String, pass: String): String? {
+    override suspend fun login(email: String, password: String): LoginResult {
         return try {
-            val response = authApi.auth(Auth(username, pass))
-            Log.d("AccountRepository", "Auth complete")
-            response.access_token
+            val response = authApi.login(
+                Login(email, password)
+            )
+            Log.d("AccountRepository", "Login complete")
+
+            response
 
         } catch (exception: Exception) {
-            Log.d("AccountRepository", "Auth failed")
-            null
+            Log.d("AccountRepository", "Login failed")
+
+            LoginResult()
+        }
+    }
+
+    override suspend fun register(
+        email: String,
+        password: String,
+        first_name: String,
+        last_name: String,
+        country: String,
+        city: String,
+        address: String,
+        mobile_no: String
+    ): RegisterResult {
+        return try {
+            val response = authApi.register(
+                Register(
+                    email = email,
+                    password = password,
+                    first_name = first_name,
+                    last_name = last_name,
+                    country = country,
+                    city = city,
+                    address = address,
+                    mobile_no = mobile_no
+                )
+            )
+            Log.d("AccountRepository", "Register complete")
+
+            response
+
+        } catch (exception: Exception) {
+            Log.d("AccountRepository", "Register failed")
+
+            RegisterResult()
         }
     }
 

@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import me.jadjer.ansem.AccountGeneral
+import me.jadjer.ansem.data.AccountGeneral
 import me.jadjer.ansem.R
 import me.jadjer.ansem.databinding.FragmentLoginBinding
 import me.jadjer.ansem.utils.Event
@@ -39,10 +39,7 @@ class LoginFragment : Fragment() {
         navController = findNavController()
 
         val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
-
-        if (accounts.isEmpty()) {
-            Toast.makeText(context, "No accounts", Toast.LENGTH_SHORT).show()
-        } else {
+        if (accounts.isNotEmpty()) {
             navController.navigate(R.id.action_loginFragment_to_requestListFragment)
         }
 
@@ -84,7 +81,7 @@ class LoginFragment : Fragment() {
                         password.text.toString(),
                         event.data!!
                     )
-                    navController.navigate(R.id.action_loginFragment_to_requestListFragment)
+                    showRequests()
                 }
                 Event.Status.ERROR -> {
                     showLoginFailed(event.message)
@@ -127,6 +124,10 @@ class LoginFragment : Fragment() {
         signup.setOnClickListener {
             navController.navigate(R.id.action_loginFragment_to_registrationFragment)
         }
+    }
+
+    private fun showRequests() {
+        navController.navigate(R.id.action_loginFragment_to_requestListFragment)
     }
 
     private fun addAccountToAccountManager(username: String, password: String, token: String) {

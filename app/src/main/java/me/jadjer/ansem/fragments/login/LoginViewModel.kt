@@ -21,18 +21,23 @@ class LoginViewModel(private val accountRepository: AccountRepository) : ViewMod
         loginEvent.value = Event.loading()
 
         viewModelScope.launch {
-            val token = accountRepository.login(username, password)
-            if (token == null) {
-                loginEvent.value = Event.error("Authentication error")
-            }
+            val loginResult = accountRepository.login(
+                email = username,
+                password = password
+            )
 
-            loginEvent.value = Event.success(token)
+            if (loginResult.access_token.isNotEmpty()) {
+                loginEvent.value = Event.success(loginResult.access_token)
+
+            } else {
+                loginEvent.value = Event.error(loginResult.error)
+            }
         }
     }
 
     fun loginDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
-            loginFormState.value = LoginFormState(usernameError = R.string.invalid_username)
+            loginFormState.value = LoginFormState(usernameError = R.string.invalid_email)
             return
         }
 

@@ -21,8 +21,8 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="me.jadjer.ansem.fragments.login.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        android:label="@string/title_login"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
@@ -35,6 +35,11 @@
     <fragment
         android:id="@+id/registrationFragment"
         android:name="me.jadjer.ansem.fragments.registration.RegistrationFragment"
-        android:label="fragment_registration"
+        android:label="@string/title_registration"
         tools:layout="@layout/fragment_registration" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="me.jadjer.ansem.fragments.user.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
 </navigation>

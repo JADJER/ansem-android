@@ -1,4 +1,4 @@
-package me.jadjer.ansem;
+package me.jadjer.ansem.data;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,11 +12,6 @@ public class AccountGeneral {
      * Account type id
      */
     public static final String ACCOUNT_TYPE = "me.jadjer.ansem";
-
-    /**
-     * Account name
-     */
-    public static final String ACCOUNT_NAME = "Ansem";
 
     /**
      * Auth token types
