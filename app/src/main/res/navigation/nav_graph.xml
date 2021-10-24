@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/moto_nav_graph"
+    android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/requestListFragment"
@@ -42,4 +42,9 @@
         android:name="me.jadjer.ansem.fragments.user.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" />
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/loginFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
 </navigation>
