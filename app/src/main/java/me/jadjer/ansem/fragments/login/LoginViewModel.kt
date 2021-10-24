@@ -1,6 +1,5 @@
 package me.jadjer.ansem.fragments.login
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
@@ -12,34 +11,23 @@ import me.jadjer.ansem.data.repository.AccountRepository
 import me.jadjer.ansem.utils.Event
 import me.jadjer.ansem.utils.LoginFormState
 
-class LoginViewModel(val context: Context, private val accountRepository: AccountRepository) : ViewModel() {
+
+class LoginViewModel(private val accountRepository: AccountRepository) : ViewModel() {
 
     val loginFormState = MutableLiveData<LoginFormState>()
-    val loginEvent = MutableLiveData<Event<Boolean>>()
+    val loginEvent = MutableLiveData<Event<String>>()
 
     fun login(username: String, password: String) {
         loginEvent.value = Event.loading()
 
         viewModelScope.launch {
-            val account = accountRepository.login(username, password)
-            if (account == null) {
+            val token = accountRepository.login(username, password)
+            if (token == null) {
                 loginEvent.value = Event.error("Authentication error")
             }
 
-            loginEvent.value = Event.success(true)
+            loginEvent.value = Event.success(token)
         }
-
-//        val am = AccountManager.get(context)
-//        am.getAuthTokenByFeatures(
-//            "me.jadjer.motoecu",
-//            "access",
-//            null,
-//            null,
-//            null,
-//            null,
-//            MainActivity.GetAuthTokenCallback(),
-//            null
-//        )
     }
 
     fun loginDataChanged(username: String, password: String) {

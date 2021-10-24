@@ -19,4 +19,8 @@
     </style>
     <style name="Theme.Ansem.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.Ansem.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.Ansem.Splash" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:windowBackground">@drawable/ic_animal_05__1_</item>
+    </style>
 </resources>

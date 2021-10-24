@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/moto_nav_graph"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/requestListFragment"
         android:name="me.jadjer.ansem.fragments.request_list.RequestListFragment"
@@ -26,29 +26,15 @@
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_requestListFragment"
+            app:destination="@id/requestListFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
         android:name="me.jadjer.ansem.fragments.registration.RegistrationFragment"
         android:label="fragment_registration"
-        tools:layout="@layout/fragment_registration" >
-        <action
-            android:id="@+id/action_registrationFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/splashFragment"
-        android:name="me.jadjer.ansem.fragments.splash.SplashFragment"
-        android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" >
-        <action
-            android:id="@+id/action_splashFragment_to_requestListFragment"
-            app:destination="@id/requestListFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_registration" />
 </navigation>

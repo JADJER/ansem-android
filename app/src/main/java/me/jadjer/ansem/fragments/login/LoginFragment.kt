@@ -1,5 +1,7 @@
 package me.jadjer.ansem.fragments.login
 
+import android.accounts.Account
+import android.accounts.AccountManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,7 +12,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import me.jadjer.ansem.AccountGeneral
 import me.jadjer.ansem.R
 import me.jadjer.ansem.databinding.FragmentLoginBinding
 import me.jadjer.ansem.utils.Event
@@ -19,8 +22,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginFragment : Fragment() {
 
     private val loginViewModel: LoginViewModel by viewModel()
+
     private lateinit var binding: FragmentLoginBinding
     private lateinit var navController: NavController
+    private lateinit var accountManager: AccountManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,13 +34,17 @@ class LoginFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
+        accountManager = AccountManager.get(context)
         binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
+        navController = findNavController()
 
-        /**
-         * Get boundle
-         */
-//        arguments?.getString("amount")
+        val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
 
+        if (accounts.isEmpty()) {
+            Toast.makeText(context, "No accounts", Toast.LENGTH_SHORT).show()
+        } else {
+            navController.navigate(R.id.action_loginFragment_to_requestListFragment)
+        }
 
         return binding.root
     }
@@ -43,12 +52,11 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navController = view.findNavController()
-
         val username = binding.loginUsername
         val password = binding.loginPassword
         val login = binding.loginButton
         val loading = binding.loginLoading
+        val signup = binding.textView2
 
         loginViewModel.loginFormState.observe(viewLifecycleOwner, Observer { loginFormState ->
             if (loginFormState == null) {
@@ -71,7 +79,12 @@ class LoginFragment : Fragment() {
                     loading.visibility = View.VISIBLE
                 }
                 Event.Status.SUCCESS -> {
-                    showMainActivity()
+                    addAccountToAccountManager(
+                        username.text.toString(),
+                        password.text.toString(),
+                        event.data!!
+                    )
+                    navController.navigate(R.id.action_loginFragment_to_requestListFragment)
                 }
                 Event.Status.ERROR -> {
                     showLoginFailed(event.message)
@@ -110,10 +123,17 @@ class LoginFragment : Fragment() {
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         }
+
+        signup.setOnClickListener {
+            navController.navigate(R.id.action_loginFragment_to_registrationFragment)
+        }
     }
 
-    private fun showMainActivity() {
-        navController.setGraph(R.navigation.main_navigation)
+    private fun addAccountToAccountManager(username: String, password: String, token: String) {
+        val account = Account(username, AccountGeneral.ACCOUNT_TYPE)
+
+        accountManager.addAccountExplicitly(account, password, null)
+        accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, token)
     }
 
     private fun showLoginFailed(error: String?) {

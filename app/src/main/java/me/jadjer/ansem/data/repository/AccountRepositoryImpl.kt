@@ -40,32 +40,23 @@ class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) 
         return account
     }
 
-    override suspend fun registration(username: String, pass: String, data: Bundle?): Boolean {
+    override suspend fun registration(username: String, pass: String, data: Bundle?): Account? {
         val account = Account(username, ACCOUNT_TYPE)
 
         accountManager.addAccountExplicitly(account, pass, data)
 
-        return true
+        return null
     }
 
-    override suspend fun login(username: String, pass: String): Boolean {
-        val am: AccountManager = AccountManager.get(context) // "this" references the current Context
-
-        val accounts: Array<out Account> = am.getAccountsByType("me.jadjer.ansem")
-
-        for(account in accounts){
-            Log.d("Account", "Item $account")
-        }
-
+    override suspend fun login(username: String, pass: String): String? {
         return try {
             val response = authApi.auth(Auth(username, pass))
             Log.d("AccountRepository", "Auth complete")
-            token = response.access_token
-            true
+            response.access_token
 
         } catch (exception: Exception) {
             Log.d("AccountRepository", "Auth failed")
-            false
+            null
         }
     }
 
