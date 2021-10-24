@@ -3,14 +3,12 @@ package me.jadjer.ansem.data.model.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import me.jadjer.ansem.data.model.entity.User
-import me.jadjer.ansem.data.model.entity.UserWithMotorcycles
 
 @Dao
 interface UserDao {
 
-    @Transaction
     @Query("SELECT * FROM users where userId = :userId")
-    fun getUserWithMotorcycles(userId: Int): LiveData<UserWithMotorcycles>
+    fun getUser(userId: Int): LiveData<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: User)

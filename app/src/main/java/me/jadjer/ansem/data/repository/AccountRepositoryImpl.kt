@@ -4,11 +4,19 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+
 import me.jadjer.ansem.data.ACCOUNT_TYPE
 import me.jadjer.ansem.data.TOKEN_TYPE_ACCESS
-import me.jadjer.ansem.data.model.repository.MotoAccount
+import me.jadjer.ansem.data.api.AuthApi
+import me.jadjer.ansem.data.model.api.Login
+import me.jadjer.ansem.data.model.api.LoginResult
+import me.jadjer.ansem.data.model.api.Register
+import me.jadjer.ansem.data.model.api.RegisterResult
 
-class AccountRepositoryImpl(context: Context) : AccountRepository {
+
+class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) :
+    AccountRepository {
 
     private var accountManager: AccountManager = AccountManager.get(context)
     private var account: Account? = null
@@ -36,12 +44,54 @@ class AccountRepositoryImpl(context: Context) : AccountRepository {
         return account
     }
 
-    override fun registration(username: String, pass: String, data: Bundle?): Account {
-        TODO("Not yet implemented")
+    override suspend fun login(email: String, password: String): LoginResult {
+        return try {
+            val response = authApi.login(
+                Login(email, password)
+            )
+            Log.d("AccountRepository", "Login complete")
+
+            response
+
+        } catch (exception: Exception) {
+            Log.d("AccountRepository", "Login failed")
+
+            LoginResult()
+        }
     }
 
-    override fun login(username: String, pass: String): Account? {
-        TODO("Not yet implemented")
+    override suspend fun register(
+        email: String,
+        password: String,
+        first_name: String,
+        last_name: String,
+        country: String,
+        city: String,
+        address: String,
+        mobile_no: String
+    ): RegisterResult {
+        return try {
+            val response = authApi.register(
+                Register(
+                    email = email,
+                    password = password,
+                    first_name = first_name,
+                    last_name = last_name,
+                    country = country,
+                    city = city,
+                    address = address,
+                    mobile_no = mobile_no
+                )
+            )
+            Log.d("AccountRepository", "Register complete")
+
+            response
+
+        } catch (exception: Exception) {
+            Log.d("AccountRepository", "Register failed")
+
+            RegisterResult()
+        }
     }
 
     override fun logout() {
@@ -69,89 +119,6 @@ class AccountRepositoryImpl(context: Context) : AccountRepository {
 
         return token
     }
-
-    //    override suspend fun createAccount(
-//        name: String,
-//        pass: String,
-//        data: Bundle,
-//        token: String
-//    ): MotoAccount {
-//
-//        val account = Account(name, "me.jadjer.motoecu")
-//
-//        accountManager.addAccountExplicitly(account, pass, data)
-//        accountManager.setAuthToken(account, "access", token)
-//
-//        return MotoAccount(name, token)
-//    }
-//
-//    override suspend fun deleteAccount(name: String) {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override suspend fun isLogged(): Event<AuthResult> {
-//        val accounts = accountManager.getAccountsByType(accountType)
-//
-//        for (acc in accounts) {
-//            val token = getToken(acc)
-//            return Event.success(AuthResult(true, token!!))
-//        }
-//
-//        return Event.error("Not logged")
-//    }
-//
-//    override suspend fun login(username: String, password: String): Event<AuthResult> {
-//        try {
-//            val response = authApi.login(username, password)
-//
-//            if (response.error.isNotEmpty()) {
-//                Log.d("Auth", "Error Message: ${response.error}")
-//                Log.d("Auth", "Error Description: ${response.error_description}")
-//                Log.d("Auth", "Hint: ${response.hint}")
-//                return Event.error(response.error)
-//            }
-//
-//            val account = Account(username, accountType)
-//
-////            accountManager.addAccountExplicitly(account, pass, data)
-////            accountManager.setAuthToken(account, "access", token)
-//
-//        } catch (e: Exception) {
-//            Log.e("Auth", "Error: ${e.message}")
-//            return Event.error(e.message.toString())
-//        }
-//
-//        return Event.error("Some wrong")
-//    }
-//
-//    override suspend fun logout() {
-//    }
-//
-//    override suspend fun registration(
-//        name: String,
-//        email: String,
-//        username: String,
-//        password: String
-//    ): Event<AuthResult> {
-//
-//        try {
-//            val response = authApi.register(name, email, username, password, password)
-//
-//            val bundle = Bundle()
-//            bundle.putString(AccountManager.KEY_ACCOUNT_NAME, name)
-//            bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, "me.jadjer.motoecu")
-//            bundle.putString(AccountManager.KEY_AUTHTOKEN, response.data?.token)
-//
-//            val account = Account(name, "me.jadjer.motoecu")
-//            accountManager.addAccountExplicitly(account, null, bundle)
-//
-//            return Event.success(data = AuthResult(true, response.data?.token.toString()))
-//
-//        } catch (e: Exception) {
-//            Log.e("Auth", "Error: ${e.message}")
-//            return Event.error(e.message.toString())
-//        }
-//    }
 
     private fun getToken(account: Account): String? {
         var token: String? = null
