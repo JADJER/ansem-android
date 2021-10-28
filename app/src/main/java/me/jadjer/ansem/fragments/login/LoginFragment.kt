@@ -1,6 +1,5 @@
 package me.jadjer.ansem.fragments.login
 
-import android.accounts.Account
 import android.accounts.AccountManager
 import android.os.Bundle
 import android.text.Editable
@@ -13,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import me.jadjer.ansem.data.AccountGeneral
 import me.jadjer.ansem.R
 import me.jadjer.ansem.databinding.FragmentLoginBinding
 import me.jadjer.ansem.utils.Event
@@ -38,10 +36,19 @@ class LoginFragment : Fragment() {
         binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
         navController = findNavController()
 
-        val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
-        if (accounts.isNotEmpty()) {
-            navController.navigate(R.id.action_loginFragment_to_requestListFragment)
-        }
+//        val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
+//        for (account in accounts) {
+//            val token = accountManager.getAuthToken(
+//                account,
+//                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
+//                null,
+//                activity,
+//                null,
+//                null
+//            )
+//
+//            navController.navigate(R.id.action_loginFragment_to_requestListFragment)
+//        }
 
         return binding.root
     }
@@ -76,12 +83,7 @@ class LoginFragment : Fragment() {
                     loading.visibility = View.VISIBLE
                 }
                 Event.Status.SUCCESS -> {
-                    addAccountToAccountManager(
-                        username.text.toString(),
-                        password.text.toString(),
-                        event.data!!
-                    )
-                    showRequests()
+                    showRequestsFragment()
                 }
                 Event.Status.ERROR -> {
                     showLoginFailed(event.message)
@@ -89,6 +91,8 @@ class LoginFragment : Fragment() {
                 }
             }
         })
+
+        loginViewModel.check()
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
@@ -126,15 +130,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun showRequests() {
+    private fun showRequestsFragment() {
         navController.navigate(R.id.action_loginFragment_to_requestListFragment)
-    }
-
-    private fun addAccountToAccountManager(username: String, password: String, token: String) {
-        val account = Account(username, AccountGeneral.ACCOUNT_TYPE)
-
-        accountManager.addAccountExplicitly(account, password, null)
-        accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, token)
     }
 
     private fun showLoginFailed(error: String?) {

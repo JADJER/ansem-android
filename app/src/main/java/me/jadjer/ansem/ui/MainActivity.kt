@@ -1,8 +1,11 @@
 package me.jadjer.ansem.ui
 
 import android.accounts.AccountManager
+import android.accounts.AccountManagerCallback
+import android.accounts.AccountManagerFuture
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -14,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import me.jadjer.ansem.R
 import me.jadjer.ansem.data.AccountGeneral
 import me.jadjer.ansem.databinding.ActivityMainBinding
+import me.jadjer.ansem.fragments.login.LoginFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -73,6 +77,31 @@ class MainActivity : AppCompatActivity() {
         val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
         if (accounts.isEmpty()) {
             navController.navigate(R.id.action_global_loginFragment)
+        }
+
+//        accountManager.getAuthTokenByFeatures(
+//            AccountGeneral.ACCOUNT_TYPE,
+//            AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
+//            null,
+//            this,
+//            null,
+//            null,
+//            AuthCallback(navController),
+//            null
+//        )
+    }
+
+    private class AuthCallback(private val navController: NavController) :
+        AccountManagerCallback<Bundle> {
+
+        override fun run(future: AccountManagerFuture<Bundle>) {
+            val bundle = future.result
+
+            if (future.isDone) {
+                val token = bundle.getString(AccountManager.KEY_AUTHTOKEN)!!
+                Log.d("AuthCallback", token)
+                navController.navigate(R.id.action_loginFragment_to_requestListFragment)
+            }
         }
     }
 }

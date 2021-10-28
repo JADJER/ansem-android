@@ -9,10 +9,11 @@ import android.util.Log
 import me.jadjer.ansem.data.ACCOUNT_TYPE
 import me.jadjer.ansem.data.TOKEN_TYPE_ACCESS
 import me.jadjer.ansem.data.api.AuthApi
-import me.jadjer.ansem.data.model.api.Login
-import me.jadjer.ansem.data.model.api.LoginResult
-import me.jadjer.ansem.data.model.api.Register
-import me.jadjer.ansem.data.model.api.RegisterResult
+import me.jadjer.ansem.data.model.api.LoginRequest
+import me.jadjer.ansem.data.model.api.LoginResponse
+import me.jadjer.ansem.data.model.api.RegisterRequest
+import me.jadjer.ansem.data.model.api.RegisterResponse
+import me.jadjer.ansem.utils.ResponseWrapper
 
 
 class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) :
@@ -44,54 +45,21 @@ class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) 
         return account
     }
 
-    override suspend fun login(email: String, password: String): LoginResult {
-        return try {
-            val response = authApi.login(
-                Login(email, password)
-            )
-            Log.d("AccountRepository", "Login complete")
-
-            response
-
-        } catch (exception: Exception) {
-            Log.d("AccountRepository", "Login failed")
-
-            LoginResult()
-        }
+    override suspend fun login(username: String, password: String): ResponseWrapper<LoginResponse> {
+        return authApi.login(
+            LoginRequest(username, password)
+        )
     }
 
     override suspend fun register(
-        email: String,
+        username: String,
         password: String,
         first_name: String,
         last_name: String,
-        country: String,
-        city: String,
-        address: String,
-        mobile_no: String
-    ): RegisterResult {
-        return try {
-            val response = authApi.register(
-                Register(
-                    email = email,
-                    password = password,
-                    first_name = first_name,
-                    last_name = last_name,
-                    country = country,
-                    city = city,
-                    address = address,
-                    mobile_no = mobile_no
-                )
-            )
-            Log.d("AccountRepository", "Register complete")
-
-            response
-
-        } catch (exception: Exception) {
-            Log.d("AccountRepository", "Register failed")
-
-            RegisterResult()
-        }
+    ): ResponseWrapper<RegisterResponse> {
+        return authApi.register(
+            RegisterRequest(username, password, first_name, last_name)
+        )
     }
 
     override fun logout() {

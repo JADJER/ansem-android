@@ -1,9 +1,9 @@
-package me.jadjer.ansem.fragments.user
+package me.jadjer.ansem.fragments.profile
 
 import androidx.lifecycle.ViewModel
 import me.jadjer.ansem.data.model.entity.User
 
-class UserProfileViewModel() : ViewModel() {
+class ProfileViewModel() : ViewModel() {
     val userId : String = TODO()
     val user : User = TODO()
 }

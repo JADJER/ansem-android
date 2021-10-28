@@ -22,33 +22,19 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/registerEmail"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:ems="10"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress"
-                    android:minHeight="48dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
                     android:id="@+id/registerFirstName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="24dp"
                     android:ems="10"
                     android:hint="@string/first_name"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/registerEmail" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/registerLastName"
@@ -62,68 +48,25 @@
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/registerFirstName" />
 
                 <EditText
-                    android:id="@+id/registerCountry"
+                    android:id="@+id/registerEmail"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="24dp"
                     android:ems="10"
-                    android:hint="@string/country"
-                    android:inputType="textPersonName"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
                     android:minHeight="48dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/registerLastName" />
-
-                <EditText
-                    android:id="@+id/registerCity"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="24dp"
-                    android:ems="10"
-                    android:hint="@string/city"
-                    android:inputType="textPersonName"
-                    android:minHeight="48dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/registerCountry" />
-
-                <EditText
-                    android:id="@+id/registerAddress"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="24dp"
-                    android:ems="10"
-                    android:hint="@string/address"
-                    android:inputType="textPostalAddress"
-                    android:minHeight="48dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/registerCity" />
-
-                <EditText
-                    android:id="@+id/registerMobileNo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="24dp"
-                    android:ems="10"
-                    android:hint="@string/mobile_no"
-                    android:inputType="phone"
-                    android:minHeight="48dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/registerAddress" />
 
                 <EditText
                     android:id="@+id/registerPassword"
@@ -137,8 +80,9 @@
                     android:inputType="textPassword"
                     android:minHeight="48dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/registerMobileNo" />
+                    app:layout_constraintTop_toBottomOf="@+id/registerEmail" />
 
                 <EditText
                     android:id="@+id/registerPasswordAgain"

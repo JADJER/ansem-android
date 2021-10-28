@@ -1,5 +1,6 @@
 package me.jadjer.ansem.app.di
 
+import me.jadjer.ansem.utils.AuthorizationInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,15 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 val netModule = module {
     single<OkHttpClient> { provideSslOkhttpClient() }
     single<Retrofit> { provideRetrofit(get<OkHttpClient>()) }
-}
-
-fun provideDefaultOkhttpClient(): OkHttpClient {
-    val interceptor = HttpLoggingInterceptor()
-    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-    return OkHttpClient.Builder()
-        .addInterceptor(interceptor)
-        .build()
 }
 
 fun provideSslOkhttpClient(): OkHttpClient {
@@ -70,17 +62,8 @@ fun provideSslOkhttpClient(): OkHttpClient {
         .build()
 
     val httpClient = OkHttpClient.Builder()
+        .addInterceptor(AuthorizationInterceptor())
         .addInterceptor(interceptor)
-        .addInterceptor { chain ->
-            val original = chain.request()
-
-            // Request customization: add request headers
-            val requestBuilder = original.newBuilder()
-                .header("Authorization", "MY_API_KEY") // <-- this is the important line
-
-            val request = requestBuilder.build()
-            chain.proceed(request)
-        }
         .sslSocketFactory(certificates.sslSocketFactory(), certificates.trustManager)
 
     return httpClient.build()

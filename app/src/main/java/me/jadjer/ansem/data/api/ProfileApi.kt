@@ -6,6 +6,9 @@ import retrofit2.http.*
 
 interface ProfileApi {
 
-    @POST("users")
+    @POST("profile")
     suspend fun create(@Body profile: Profile): ResponseWrapper<Profile>
+
+    @GET("profile")
+    suspend fun getProfile(): ResponseWrapper<Profile>
 }

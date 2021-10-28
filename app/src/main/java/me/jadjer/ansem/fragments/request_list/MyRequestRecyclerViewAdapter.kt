@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 
-import me.jadjer.ansem.placeholder.PlaceholderContent.PlaceholderItem
+import me.jadjer.ansem.fragments.request_list.PlaceholderContent.PlaceholderItem
 import me.jadjer.ansem.databinding.FragmentRequestItemBinding
 
 /**

@@ -39,9 +39,9 @@
         tools:layout="@layout/fragment_registration" />
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="me.jadjer.ansem.fragments.user.UserProfileFragment"
+        android:name="me.jadjer.ansem.fragments.profile.ProfileFragment"
         android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_user_profile" />
+        tools:layout="@layout/fragment_profile" />
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/loginFragment"
