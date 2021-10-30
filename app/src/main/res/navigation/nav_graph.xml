@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/requestListFragment"
         android:name="me.jadjer.ansem.fragments.request_list.RequestListFragment"
-        android:label="fragment_request_list"
-        tools:layout="@layout/fragment_request_list" >
+        android:label="@string/title_request_list"
+        tools:layout="@layout/fragment_request_list">
         <action
             android:id="@+id/action_requestListFragment_to_requestDetailFragment"
             app:destination="@id/requestDetailFragment" />
@@ -16,7 +16,7 @@
     <fragment
         android:id="@+id/requestDetailFragment"
         android:name="me.jadjer.ansem.fragments.request_detail.RequestDetailFragment"
-        android:label="fragment_request_detail"
+        android:label="@string/title_request_detail"
         tools:layout="@layout/fragment_request_detail" />
     <fragment
         android:id="@+id/loginFragment"
@@ -39,9 +39,9 @@
         tools:layout="@layout/fragment_registration" />
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="me.jadjer.ansem.fragments.user.UserProfileFragment"
-        android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_user_profile" />
+        android:name="me.jadjer.ansem.fragments.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/loginFragment"

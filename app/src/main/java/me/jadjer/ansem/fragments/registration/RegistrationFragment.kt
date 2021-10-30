@@ -41,13 +41,9 @@ class RegistrationFragment : Fragment() {
 
         navController = view.findNavController()
 
-        val email = binding.registerEmail
+        val username = binding.registerEmail
         val firstName = binding.registerFirstName
         val lastName = binding.registerFirstName
-        val country = binding.registerCountry
-        val city = binding.registerCity
-        val address = binding.registerAddress
-        val mobileNo = binding.registerMobileNo
         val password = binding.registerPassword
         val passwordAgain = binding.registerPasswordAgain
         val register = binding.registerButton
@@ -61,26 +57,14 @@ class RegistrationFragment : Fragment() {
 
                 register.isEnabled = registrationFormState.isDataValid
 
-                if (registrationFormState.emailError != null) {
-                    email.error = getString(registrationFormState.emailError)
+                if (registrationFormState.usernameError != null) {
+                    username.error = getString(registrationFormState.usernameError)
                 }
                 if (registrationFormState.firstNameError != null) {
                     firstName.error = getString(registrationFormState.firstNameError)
                 }
                 if (registrationFormState.lastNameError != null) {
                     lastName.error = getString(registrationFormState.lastNameError)
-                }
-                if (registrationFormState.countryError != null) {
-                    country.error = getString(registrationFormState.countryError)
-                }
-                if (registrationFormState.cityError != null) {
-                    city.error = getString(registrationFormState.cityError)
-                }
-                if (registrationFormState.addressError != null) {
-                    address.error = getString(registrationFormState.addressError)
-                }
-                if (registrationFormState.mobileNoError != null) {
-                    mobileNo.error = getString(registrationFormState.mobileNoError)
                 }
                 if (registrationFormState.passwordError != null) {
                     password.error = getString(registrationFormState.passwordError)
@@ -103,114 +87,42 @@ class RegistrationFragment : Fragment() {
             }
         })
 
-        email.afterTextChanged {
+        username.afterTextChanged {
             registrationViewModel.registerDataChanged(
-                email.text.toString(),
+                username.text.toString(),
+                password.text.toString(),
                 firstName.text.toString(),
                 lastName.text.toString(),
-                country.text.toString(),
-                city.text.toString(),
-                address.text.toString(),
-                mobileNo.text.toString(),
-                password.text.toString(),
                 passwordAgain.text.toString()
             )
         }
 
         firstName.afterTextChanged {
             registrationViewModel.registerDataChanged(
-                email.text.toString(),
+                username.text.toString(),
+                password.text.toString(),
                 firstName.text.toString(),
                 lastName.text.toString(),
-                country.text.toString(),
-                city.text.toString(),
-                address.text.toString(),
-                mobileNo.text.toString(),
-                password.text.toString(),
                 passwordAgain.text.toString()
             )
         }
 
         lastName.afterTextChanged {
             registrationViewModel.registerDataChanged(
-                email.text.toString(),
+                username.text.toString(),
+                password.text.toString(),
                 firstName.text.toString(),
                 lastName.text.toString(),
-                country.text.toString(),
-                city.text.toString(),
-                address.text.toString(),
-                mobileNo.text.toString(),
-                password.text.toString(),
-                passwordAgain.text.toString()
-            )
-        }
-
-        country.afterTextChanged {
-            registrationViewModel.registerDataChanged(
-                email.text.toString(),
-                firstName.text.toString(),
-                lastName.text.toString(),
-                country.text.toString(),
-                city.text.toString(),
-                address.text.toString(),
-                mobileNo.text.toString(),
-                password.text.toString(),
-                passwordAgain.text.toString()
-            )
-        }
-
-        city.afterTextChanged {
-            registrationViewModel.registerDataChanged(
-                email.text.toString(),
-                firstName.text.toString(),
-                lastName.text.toString(),
-                country.text.toString(),
-                city.text.toString(),
-                address.text.toString(),
-                mobileNo.text.toString(),
-                password.text.toString(),
-                passwordAgain.text.toString()
-            )
-        }
-
-        address.afterTextChanged {
-            registrationViewModel.registerDataChanged(
-                email.text.toString(),
-                firstName.text.toString(),
-                lastName.text.toString(),
-                country.text.toString(),
-                city.text.toString(),
-                address.text.toString(),
-                mobileNo.text.toString(),
-                password.text.toString(),
-                passwordAgain.text.toString()
-            )
-        }
-
-        mobileNo.afterTextChanged {
-            registrationViewModel.registerDataChanged(
-                email.text.toString(),
-                firstName.text.toString(),
-                lastName.text.toString(),
-                country.text.toString(),
-                city.text.toString(),
-                address.text.toString(),
-                mobileNo.text.toString(),
-                password.text.toString(),
                 passwordAgain.text.toString()
             )
         }
 
         password.afterTextChanged {
             registrationViewModel.registerDataChanged(
-                email.text.toString(),
+                username.text.toString(),
+                password.text.toString(),
                 firstName.text.toString(),
                 lastName.text.toString(),
-                country.text.toString(),
-                city.text.toString(),
-                address.text.toString(),
-                mobileNo.text.toString(),
-                password.text.toString(),
                 passwordAgain.text.toString()
             )
         }
@@ -218,14 +130,10 @@ class RegistrationFragment : Fragment() {
         passwordAgain.apply {
             afterTextChanged {
                 registrationViewModel.registerDataChanged(
-                    email.text.toString(),
+                    username.text.toString(),
+                    password.text.toString(),
                     firstName.text.toString(),
                     lastName.text.toString(),
-                    country.text.toString(),
-                    city.text.toString(),
-                    address.text.toString(),
-                    mobileNo.text.toString(),
-                    password.text.toString(),
                     passwordAgain.text.toString()
                 )
             }
@@ -234,14 +142,10 @@ class RegistrationFragment : Fragment() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         registrationViewModel.register(
-                            email.text.toString(),
+                            username.text.toString(),
+                            password.text.toString(),
                             firstName.text.toString(),
-                            lastName.text.toString(),
-                            country.text.toString(),
-                            city.text.toString(),
-                            address.text.toString(),
-                            mobileNo.text.toString(),
-                            password.text.toString()
+                            lastName.text.toString()
                         )
                 }
                 false
@@ -250,14 +154,10 @@ class RegistrationFragment : Fragment() {
             register.setOnClickListener {
                 loading.visibility = View.VISIBLE
                 registrationViewModel.register(
-                    email.text.toString(),
+                    username.text.toString(),
+                    password.text.toString(),
                     firstName.text.toString(),
-                    lastName.text.toString(),
-                    country.text.toString(),
-                    city.text.toString(),
-                    address.text.toString(),
-                    mobileNo.text.toString(),
-                    password.text.toString()
+                    lastName.text.toString()
                 )
             }
         }

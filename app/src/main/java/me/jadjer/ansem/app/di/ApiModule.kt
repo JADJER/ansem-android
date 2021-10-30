@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 val apiModule = module {
     single { provideAuthApiService(get()) }
     single { provideProfileApiService(get()) }
+    single { provideRequestApiService(get()) }
 }
 
 fun provideAuthApiService(retrofit: Retrofit): AuthApi {
@@ -15,4 +16,8 @@ fun provideAuthApiService(retrofit: Retrofit): AuthApi {
 
 fun provideProfileApiService(retrofit: Retrofit): ProfileApi {
     return retrofit.create(ProfileApi::class.java)
+}
+
+fun provideRequestApiService(retrofit: Retrofit): RequestApi {
+    return retrofit.create(RequestApi::class.java)
 }

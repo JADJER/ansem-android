@@ -1,6 +1,5 @@
 package me.jadjer.ansem.fragments.registration
 
-import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
@@ -17,52 +16,37 @@ class RegistrationViewModel(private val accountRepository: AccountRepository) : 
     val registerFormState = MutableLiveData<RegisterFormState>()
     val registrationEvent = MutableLiveData<Event<Boolean>>()
 
-    fun register(
-        email: String,
-        first_name: String,
-        last_name: String,
-        country: String,
-        city: String,
-        address: String,
-        mobile_no: String,
-        password: String,
-    ) {
+    fun register(username: String, password: String, first_name: String, last_name: String) {
         registrationEvent.value = Event.loading()
 
         viewModelScope.launch {
-            val registerResult = accountRepository.register(
-                email = email,
-                password = password,
-                first_name = first_name,
-                last_name = last_name,
-                country = country,
-                city = city,
-                address = address,
-                mobile_no = mobile_no
-            )
-
-            if (registerResult.error.isNotEmpty()) {
-                registrationEvent.value = Event.error(registerResult.error)
-
-            } else {
-                registrationEvent.value = Event.success(true)
+            try {
+                val registerResponse = accountRepository.register(
+                    username,
+                    password,
+                    first_name,
+                    last_name
+                )
+                if (registerResponse.success) {
+                    registrationEvent.value = Event.success(true, registerResponse.message)
+                } else {
+                    registrationEvent.value = Event.error(registerResponse.message)
+                }
+            } catch (exception: Exception) {
+                registrationEvent.value = Event.error("Internal server error")
             }
         }
     }
 
     fun registerDataChanged(
-        email: String,
+        username: String,
+        password: String,
         first_name: String,
         last_name: String,
-        country: String,
-        city: String,
-        address: String,
-        mobile_no: String,
-        password: String,
         password_again: String
     ) {
-        if (!isEmailValid(email)) {
-            registerFormState.value = RegisterFormState(emailError = R.string.invalid_email)
+        if (!isEmailValid(username)) {
+            registerFormState.value = RegisterFormState(usernameError = R.string.invalid_email)
             return
         }
 
@@ -74,27 +58,6 @@ class RegistrationViewModel(private val accountRepository: AccountRepository) : 
 
         if (!isFieldNotEmpty(last_name)) {
             registerFormState.value = RegisterFormState(lastNameError = R.string.invalid_last_name)
-            return
-        }
-
-        if (!isFieldNotEmpty(country)) {
-            registerFormState.value = RegisterFormState(countryError = R.string.invalid_country)
-            return
-        }
-
-        if (!isFieldNotEmpty(city)) {
-            registerFormState.value = RegisterFormState(cityError = R.string.invalid_city)
-            return
-        }
-
-        if (!isFieldNotEmpty(address)) {
-            registerFormState.value = RegisterFormState(addressError = R.string.invalid_address)
-            return
-        }
-
-//        TODO Заменить проверку номера
-        if (!isFieldNotEmpty(mobile_no)) {
-            registerFormState.value = RegisterFormState(mobileNoError = R.string.invalid_mobile_no)
             return
         }
 

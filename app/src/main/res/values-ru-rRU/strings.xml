@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ansem</string>
+    <string name="title_request_list">Запросы</string>
+    <string name="title_profile">Профиль</string>
+    <string name="title_registration">Регистрация</string>
+    <string name="title_login">Логин</string>
+    <string name="last_name">Фамилия</string>
+    <string name="first_name">Имя</string>
+    <string name="country">Страна</string>
+    <string name="city">Город</string>
+    <string name="address">Адрес</string>
+    <string name="mobile_no">Мобильный</string>
+    <string name="or">или</string>
+    <string name="password_again">Повторите пароль</string>
+    <string name="password">Пароль</string>
+    <string name="login">Имя пользователя</string>
+    <string name="login_failed">Не удалосб авторизоваться</string>
+    <string name="invalid_password">Не корректный пароль</string>
+    <string name="invalid_password_again">Пароли не совпадают</string>
+    <string name="prompt_username">Имя пользователя</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="invalid_username">Не верное имя пользователя</string>
+    <string name="action_login">Войти</string>
+    <string name="action_register">Зарегистрироваться</string>
+    <string name="invalid_email">Не корректный email</string>
+    <string name="invalid_first_name">Не указано имя</string>
+    <string name="invalid_last_name">Не указана фамилия</string>
+    <string name="invalid_country">Не указана страна</string>
+    <string name="invalid_city">Не указан город</string>
+    <string name="invalid_address">Не указан адрес</string>
+    <string name="invalid_mobile_no">Не указан номер телефона</string>
+    <string name="title_request_detail">Запрос</string>
+</resources>
