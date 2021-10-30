@@ -10,10 +10,6 @@ import me.jadjer.ansem.R
 
 class RequestDetailFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = RequestDetailFragment()
-    }
-
     private lateinit var viewModel: RequestDetailViewModel
 
     override fun onCreateView(
@@ -23,10 +19,8 @@ class RequestDetailFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_request_detail, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(RequestDetailViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[RequestDetailViewModel::class.java]
     }
-
 }

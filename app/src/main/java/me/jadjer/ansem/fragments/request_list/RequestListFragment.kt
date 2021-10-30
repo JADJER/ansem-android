@@ -3,11 +3,10 @@ package me.jadjer.ansem.fragments.request_list
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import me.jadjer.ansem.R
+import me.jadjer.ansem.databinding.FragmentRequestListBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -17,20 +16,19 @@ class RequestListFragment : Fragment() {
 
     private val requestListViewModel: RequestListViewModel by viewModel()
 
+    private lateinit var binding: FragmentRequestListBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_request_list, container, false)
+    ): View {
+        binding = FragmentRequestListBinding.inflate(layoutInflater, container, false)
 
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = LinearLayoutManager(context)
-                adapter = MyRequestRecyclerViewAdapter(PlaceholderContent.ITEMS)
-            }
-        }
+        val recyclerView = binding.recyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = MyRequestRecyclerViewAdapter(PlaceholderContent.ITEMS)
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -36,20 +36,6 @@ class LoginFragment : Fragment() {
         binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
         navController = findNavController()
 
-//        val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
-//        for (account in accounts) {
-//            val token = accountManager.getAuthToken(
-//                account,
-//                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
-//                null,
-//                activity,
-//                null,
-//                null
-//            )
-//
-//            navController.navigate(R.id.action_loginFragment_to_requestListFragment)
-//        }
-
         return binding.root
     }
 
@@ -92,7 +78,7 @@ class LoginFragment : Fragment() {
             }
         })
 
-        loginViewModel.check()
+        loginViewModel.checkAccount()
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(

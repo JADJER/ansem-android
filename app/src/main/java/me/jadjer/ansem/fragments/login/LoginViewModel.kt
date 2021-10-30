@@ -15,6 +15,7 @@ import me.jadjer.ansem.utils.Event
 import me.jadjer.ansem.utils.LoginFormState
 
 import android.accounts.*
+import android.os.Bundle
 import java.io.IOException
 
 
@@ -29,33 +30,26 @@ class LoginViewModel(
 
     private val accountManager: AccountManager = AccountManager.get(context)
 
-    fun check() {
+    fun checkAccount() {
         val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
+
+        val accountCallback = AccountCallback()
 
         for (account in accounts) {
             accountManager.getAuthToken(
                 account,
-                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
+                AccountGeneral.AUTHTOKEN_TYPE_USER,
                 null,
                 null,
-                { future ->
-                    try {
-                        val bundle = future.result
-                        val authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN, null)
-
-                        if (authToken != null) {
-                            authRepository.setToken(authToken)
-                            loginEvent.value = Event.success(authToken)
-                        }
-
-                    } catch (e: OperationCanceledException) {
-                        e.printStackTrace()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    } catch (e: AuthenticatorException) {
-                        e.printStackTrace()
-                    }
-                },
+                accountCallback,
+                null
+            )
+            accountManager.getAuthToken(
+                account,
+                AccountGeneral.AUTHTOKEN_TYPE_ADMIN,
+                null,
+                null,
+                accountCallback,
                 null
             )
         }
@@ -76,11 +70,23 @@ class LoginViewModel(
                     val account = Account(username, AccountGeneral.ACCOUNT_TYPE)
 
                     accountManager.addAccountExplicitly(account, password, null)
-                    accountManager.setAuthToken(
-                        account,
-                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
-                        token
-                    )
+
+                    val isAdmin = loginResponse.data!!.user.is_admin
+                    if (isAdmin) {
+                        accountManager.setAuthToken(
+                            account,
+                            AccountGeneral.AUTHTOKEN_TYPE_ADMIN,
+                            token
+                        )
+
+                    } else {
+                        accountManager.setAuthToken(
+                            account,
+                            AccountGeneral.AUTHTOKEN_TYPE_USER,
+                            token
+                        )
+                    }
+
 
                     /**
                      * Set token to auth repo
@@ -100,10 +106,10 @@ class LoginViewModel(
     }
 
     fun loginDataChanged(username: String, password: String) {
-        if (!isUserNameValid(username)) {
-            loginFormState.value = LoginFormState(usernameError = R.string.invalid_email)
-            return
-        }
+//        if (!isUserNameValid(username)) {
+//            loginFormState.value = LoginFormState(usernameError = R.string.invalid_email)
+//            return
+//        }
 
         if (!isPasswordValid(password)) {
             loginFormState.value = LoginFormState(passwordError = R.string.invalid_password)
@@ -113,15 +119,36 @@ class LoginViewModel(
         loginFormState.value = LoginFormState(isDataValid = true)
     }
 
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains("@")) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            username.isNotBlank()
-        }
-    }
+//    private fun isUserNameValid(username: String): Boolean {
+//        return if (username.contains("@")) {
+//            Patterns.EMAIL_ADDRESS.matcher(username).matches()
+//        } else {
+//            username.isNotBlank()
+//        }
+//    }
 
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+
+    inner class AccountCallback : AccountManagerCallback<Bundle> {
+        override fun run(future: AccountManagerFuture<Bundle>) {
+            try {
+                val bundle = future.result
+                val authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN, null)
+
+                if (authToken != null) {
+                    authRepository.setToken(authToken)
+                    loginEvent.value = Event.success(authToken)
+                }
+
+            } catch (e: OperationCanceledException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: AuthenticatorException) {
+                e.printStackTrace()
+            }
+        }
     }
 }
