@@ -20,16 +20,20 @@ class RegistrationViewModel(private val accountRepository: AccountRepository) : 
         registrationEvent.value = Event.loading()
 
         viewModelScope.launch {
-            val registerResponse = accountRepository.register(
-                username,
-                password,
-                first_name,
-                last_name
-            )
-            if (registerResponse.success) {
-                registrationEvent.value = Event.success(true, registerResponse.message)
-            } else {
-                registrationEvent.value = Event.error(registerResponse.message)
+            try {
+                val registerResponse = accountRepository.register(
+                    username,
+                    password,
+                    first_name,
+                    last_name
+                )
+                if (registerResponse.success) {
+                    registrationEvent.value = Event.success(true, registerResponse.message)
+                } else {
+                    registrationEvent.value = Event.error(registerResponse.message)
+                }
+            } catch (exception: Exception) {
+                registrationEvent.value = Event.error("Internal server error")
             }
         }
     }

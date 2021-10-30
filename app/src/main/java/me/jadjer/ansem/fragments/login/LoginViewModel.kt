@@ -65,29 +65,36 @@ class LoginViewModel(
         loginEvent.value = Event.loading()
 
         viewModelScope.launch {
-            val loginResponse = accountRepository.login(username, password)
-            if (loginResponse.success) {
-                val token = loginResponse.data!!.access_token
-                /**
-                 * Add account to account manager
-                 */
-                val account = Account(username, AccountGeneral.ACCOUNT_TYPE)
+            try {
+                val loginResponse = accountRepository.login(username, password)
+                if (loginResponse.success) {
+                    val token = loginResponse.data!!.access_token
 
-                accountManager.addAccountExplicitly(account, password, null)
-                accountManager.setAuthToken(
-                    account,
-                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
-                    token
-                )
+                    /**
+                     * Add account to account manager
+                     */
+                    val account = Account(username, AccountGeneral.ACCOUNT_TYPE)
 
-                /**
-                 * Set token to auth repo
-                 */
-                authRepository.setToken(token)
+                    accountManager.addAccountExplicitly(account, password, null)
+                    accountManager.setAuthToken(
+                        account,
+                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
+                        token
+                    )
 
-                loginEvent.value = Event.success(token, loginResponse.message)
-            } else {
-                loginEvent.value = Event.error(loginResponse.message)
+                    /**
+                     * Set token to auth repo
+                     */
+                    authRepository.setToken(token)
+
+                    loginEvent.value = Event.success(token, loginResponse.message)
+
+                } else {
+                    loginEvent.value = Event.error(loginResponse.message)
+                }
+
+            } catch (exception: Exception) {
+                loginEvent.value = Event.error("Internal server error")
             }
         }
     }
