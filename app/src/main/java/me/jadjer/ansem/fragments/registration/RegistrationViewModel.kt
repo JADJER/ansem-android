@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 import me.jadjer.ansem.R
-import me.jadjer.ansem.data.repository.AccountRepository
+import me.jadjer.ansem.data.repository.AuthRepository
 import me.jadjer.ansem.utils.Event
 import me.jadjer.ansem.utils.RegisterFormState
 
-class RegistrationViewModel(private val accountRepository: AccountRepository) : ViewModel() {
+class RegistrationViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     val registerFormState = MutableLiveData<RegisterFormState>()
     val registrationEvent = MutableLiveData<Event<Boolean>>()
@@ -21,7 +21,7 @@ class RegistrationViewModel(private val accountRepository: AccountRepository) : 
 
         viewModelScope.launch {
             try {
-                val registerResponse = accountRepository.register(
+                val registerResponse = authRepository.register(
                     username,
                     password,
                     first_name,

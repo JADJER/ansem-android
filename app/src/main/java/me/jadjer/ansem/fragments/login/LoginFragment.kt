@@ -80,19 +80,9 @@ class LoginFragment : Fragment() {
 
         loginViewModel.checkAccount()
 
-        username.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
-            )
-        }
-
         password.apply {
             afterTextChanged {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
+                loginViewModel.loginDataChanged(password.text.toString())
             }
 
             setOnEditorActionListener { _, actionId, _ ->

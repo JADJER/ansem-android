@@ -1,106 +1,58 @@
 package me.jadjer.ansem.data.repository
 
-import android.accounts.Account
-import android.accounts.AccountManager
+import android.accounts.*
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 
-import me.jadjer.ansem.data.ACCOUNT_TYPE
-import me.jadjer.ansem.data.TOKEN_TYPE_ACCESS
-import me.jadjer.ansem.data.api.AuthApi
-import me.jadjer.ansem.data.model.api.LoginRequest
-import me.jadjer.ansem.data.model.api.LoginResponse
-import me.jadjer.ansem.data.model.api.RegisterRequest
-import me.jadjer.ansem.data.model.api.RegisterResponse
-import me.jadjer.ansem.utils.ResponseWrapper
+import me.jadjer.ansem.data.AccountGeneral
+import java.io.IOException
 
 
-class AccountRepositoryImpl(val context: Context, private val authApi: AuthApi) :
-    AccountRepository {
+class AccountRepositoryImpl(context: Context) : AccountRepository {
 
-    private var accountManager: AccountManager = AccountManager.get(context)
-    private var account: Account? = null
-    private var token: String? = null
+    private var _token: String? = null
+    private var _isAuth: Boolean = false
+    private var _isAdmin: Boolean = false
+    private val _accountManager: AccountManager = AccountManager.get(context)
 
-    override fun get(): Account? {
-        val accounts = accountManager.getAccountsByType(ACCOUNT_TYPE)
-        for (exist_account in accounts) {
-            account = exist_account
-            break
+    override fun isAuth(): Boolean {
+        return _isAuth
+    }
+
+    override fun isAdmin(): Boolean {
+        return _isAdmin
+    }
+
+    override fun getToken(): String? {
+        return _token
+    }
+
+    override fun setToken(token: String, tokenType: String) {
+        _token = token
+        _isAuth = true
+        _isAdmin = false
+
+        if (tokenType == AccountGeneral.AUTH_TOKEN_TYPE_ADMIN) {
+            _isAdmin = true
         }
-
-        return account
     }
 
-    override fun get(username: String): Account? {
-        val accounts = accountManager.getAccountsByType(ACCOUNT_TYPE)
-        for (exist_account in accounts) {
-            if (exist_account.name == username) {
-                account = exist_account
-                break
-            }
-        }
+    override fun createAccount(username: String, token: String, tokenType: String) {
+        setToken(token, tokenType)
 
-        return account
+        val account = Account(username, AccountGeneral.ACCOUNT_TYPE)
+
+        _accountManager.addAccountExplicitly(account, null, null)
+        _accountManager.setAuthToken(account, tokenType, token)
     }
 
-    override suspend fun login(username: String, password: String): ResponseWrapper<LoginResponse> {
-        return authApi.login(
-            LoginRequest(username, password)
-        )
-    }
+    override fun removeAccount(username: String) {
+        _token = null
+        _isAuth = false
+        _isAdmin = false
 
-    override suspend fun register(
-        username: String,
-        password: String,
-        first_name: String,
-        last_name: String,
-    ): ResponseWrapper<RegisterResponse> {
-        return authApi.register(
-            RegisterRequest(username, password, first_name, last_name)
-        )
-    }
+        val account = Account(username, AccountGeneral.ACCOUNT_TYPE)
 
-    override fun logout() {
-        TODO("Not yet implemented")
-    }
-
-    override fun getAuthToken(): String? {
-        val future = accountManager.getAuthToken(
-            account,
-            TOKEN_TYPE_ACCESS,
-            null,
-            false,
-            null,
-            null
-        )
-        if (future.isCancelled) {
-            return null
-        }
-
-        if (!future.isDone) {
-            return null
-        }
-
-        token = future.result.getString(AccountManager.KEY_AUTHTOKEN).toString()
-
-        return token
-    }
-
-    private fun getToken(account: Account): String? {
-        var token: String? = null
-
-        accountManager.getAuthToken(account, "access", Bundle(), false, { future ->
-            if (!future.isDone && !future.isCancelled) {
-                return@getAuthToken
-            }
-
-            if (future.isDone) {
-                token = future.result.getString(AccountManager.KEY_AUTHTOKEN).toString()
-            }
-        }, null)
-
-        return token
+        _accountManager.removeAccount(account, null, null, null)
     }
 }

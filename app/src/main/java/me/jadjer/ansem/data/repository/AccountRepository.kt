@@ -1,21 +1,11 @@
 package me.jadjer.ansem.data.repository
 
-import android.accounts.Account
-import me.jadjer.ansem.data.model.api.LoginResponse
-import me.jadjer.ansem.data.model.api.RegisterResponse
-import me.jadjer.ansem.utils.ResponseWrapper
-
 interface AccountRepository {
-    fun get(): Account?
-    fun get(username: String): Account?
-    suspend fun login(username: String, password: String): ResponseWrapper<LoginResponse>
-    suspend fun register(
-        username: String,
-        password: String,
-        first_name: String,
-        last_name: String
-    ): ResponseWrapper<RegisterResponse>
 
-    fun logout()
-    fun getAuthToken(): String?
+    fun isAuth(): Boolean
+    fun isAdmin(): Boolean
+    fun getToken(): String?
+    fun setToken(token: String, tokenType: String)
+    fun createAccount(username: String, token: String, tokenType: String)
+    fun removeAccount(username: String)
 }

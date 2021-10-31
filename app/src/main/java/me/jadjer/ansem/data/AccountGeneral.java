@@ -16,6 +16,7 @@ public class AccountGeneral {
     /**
      * Auth token types
      */
-    public static final String AUTHTOKEN_TYPE_USER = "User";
-    public static final String AUTHTOKEN_TYPE_ADMIN = "Admin";
+    public static final String AUTH_TOKEN_TYPE = "auth_type";
+    public static final String AUTH_TOKEN_TYPE_USER = "auth_type_user";
+    public static final String AUTH_TOKEN_TYPE_ADMIN = "auth_type_admin";
 }

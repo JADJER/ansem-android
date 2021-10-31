@@ -6,7 +6,7 @@ import me.jadjer.ansem.data.model.entity.*
 import me.jadjer.ansem.data.model.dao.*
 
 @Database(
-    entities = [Request::class, User::class],
+    entities = [RequestEntity::class, UserEntity::class],
     version = 1,
     exportSchema = false
 )

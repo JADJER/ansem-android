@@ -1,6 +1,6 @@
 package me.jadjer.ansem.data.model.api
 
-data class Request(
+data class RequestResponse(
     val id: Int = 0,
     val school: String = "",
     val class_no: String = "",
