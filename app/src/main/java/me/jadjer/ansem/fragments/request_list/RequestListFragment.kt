@@ -23,19 +23,19 @@ class RequestListFragment : Fragment() {
 
     private val requestListViewModel: RequestListViewModel by viewModel()
 
-    private lateinit var binding: FragmentRequestListBinding
+    private lateinit var _binding: FragmentRequestListBinding
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRequestListBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentRequestListBinding.inflate(layoutInflater, container, false)
 
-        recyclerView = binding.recyclerView
+        recyclerView = _binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        return binding.root
+        return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class RequestListFragment : Fragment() {
             )
         }
 
-        val refresh = binding.swipeRefreshLayout
+        val refresh = _binding.swipeRefreshLayout
 
         refresh.setOnRefreshListener {
             requestListViewModel.update()

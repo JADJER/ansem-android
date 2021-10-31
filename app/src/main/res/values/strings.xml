@@ -25,6 +25,7 @@
     <string name="title_registration">Registration</string>
     <string name="title_request_list">Requests</string>
     <string name="title_request_detail">Request</string>
+    <string name="title_request_create">Create request</string>
     <string name="title_profile">Profile</string>
 
     <string name="invalid_email">Not a valid email</string>
@@ -37,4 +38,6 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="invalid_password_again">Passwords don\'t match</string>
     <string name="invalid_username">Not a valid username</string>
+
+    <string name="description_add_request">Add new request</string>
 </resources>
