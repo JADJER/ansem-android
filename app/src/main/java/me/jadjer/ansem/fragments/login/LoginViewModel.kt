@@ -1,8 +1,9 @@
 package me.jadjer.ansem.fragments.login
 
+import android.accounts.*
 import android.content.Context
+import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -13,91 +14,40 @@ import me.jadjer.ansem.data.repository.AccountRepository
 import me.jadjer.ansem.data.repository.AuthRepository
 import me.jadjer.ansem.utils.Event
 import me.jadjer.ansem.utils.LoginFormState
-
-import android.accounts.*
-import android.os.Bundle
 import java.io.IOException
 
 
 class LoginViewModel(
     context: Context,
-    private val accountRepository: AccountRepository,
-    private val authRepository: AuthRepository
+    private val _authRepository: AuthRepository,
+    private val _accountRepository: AccountRepository
 ) : ViewModel() {
 
     val loginFormState = MutableLiveData<LoginFormState>()
     val loginEvent = MutableLiveData<Event<String>>()
-
-    private val accountManager: AccountManager = AccountManager.get(context)
-
-    fun checkAccount() {
-        val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
-
-        val accountCallback = AccountCallback()
-
-        for (account in accounts) {
-            accountManager.getAuthToken(
-                account,
-                AccountGeneral.AUTHTOKEN_TYPE_USER,
-                null,
-                null,
-                accountCallback,
-                null
-            )
-            accountManager.getAuthToken(
-                account,
-                AccountGeneral.AUTHTOKEN_TYPE_ADMIN,
-                null,
-                null,
-                accountCallback,
-                null
-            )
-        }
-    }
+    private val _accountManager: AccountManager = AccountManager.get(context)
 
     fun login(username: String, password: String) {
         loginEvent.value = Event.loading()
 
         viewModelScope.launch {
             try {
-                val loginResponse = accountRepository.login(username, password)
-                if (loginResponse.success) {
-                    val token = loginResponse.data!!.access_token
-
-                    /**
-                     * Add account to account manager
-                     */
-                    val account = Account(username, AccountGeneral.ACCOUNT_TYPE)
-
-                    accountManager.addAccountExplicitly(account, password, null)
-
-                    val isAdmin = loginResponse.data!!.user.is_admin
-                    if (isAdmin) {
-                        accountManager.setAuthToken(
-                            account,
-                            AccountGeneral.AUTHTOKEN_TYPE_ADMIN,
-                            token
-                        )
-
-                    } else {
-                        accountManager.setAuthToken(
-                            account,
-                            AccountGeneral.AUTHTOKEN_TYPE_USER,
-                            token
-                        )
-                    }
-
-
-                    /**
-                     * Set token to auth repo
-                     */
-                    authRepository.setToken(token)
-
-                    loginEvent.value = Event.success(token, loginResponse.message)
-
-                } else {
+                val loginResponse = _authRepository.login(username, password)
+                if (!loginResponse.success) {
                     loginEvent.value = Event.error(loginResponse.message)
+                    return@launch
                 }
+
+                val token = loginResponse.data!!.access_token
+                val tokenType = if (loginResponse.data!!.user.is_admin) {
+                    AccountGeneral.AUTH_TOKEN_TYPE_ADMIN
+                } else {
+                    AccountGeneral.AUTH_TOKEN_TYPE_USER
+                }
+
+                _accountRepository.createAccount(username, token, tokenType)
+
+                loginEvent.value = Event.success(token, loginResponse.message)
 
             } catch (exception: Exception) {
                 loginEvent.value = Event.error("Internal server error")
@@ -105,12 +55,34 @@ class LoginViewModel(
         }
     }
 
-    fun loginDataChanged(username: String, password: String) {
-//        if (!isUserNameValid(username)) {
-//            loginFormState.value = LoginFormState(usernameError = R.string.invalid_email)
-//            return
-//        }
+    fun checkAccount() {
+        val accounts = _accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
+        for (account in accounts) {
+            _accountManager.getAuthTokenByFeatures(
+                AccountGeneral.ACCOUNT_TYPE,
+                AccountGeneral.AUTH_TOKEN_TYPE_ADMIN,
+                null,
+                null,
+                null,
+                null,
+                AccountCallback(AccountGeneral.AUTH_TOKEN_TYPE_ADMIN),
+                null
+            )
 
+            _accountManager.getAuthTokenByFeatures(
+                AccountGeneral.ACCOUNT_TYPE,
+                AccountGeneral.AUTH_TOKEN_TYPE_USER,
+                null,
+                null,
+                null,
+                null,
+                AccountCallback(AccountGeneral.AUTH_TOKEN_TYPE_USER),
+                null
+            )
+        }
+    }
+
+    fun loginDataChanged(password: String) {
         if (!isPasswordValid(password)) {
             loginFormState.value = LoginFormState(passwordError = R.string.invalid_password)
             return
@@ -119,28 +91,19 @@ class LoginViewModel(
         loginFormState.value = LoginFormState(isDataValid = true)
     }
 
-//    private fun isUserNameValid(username: String): Boolean {
-//        return if (username.contains("@")) {
-//            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-//        } else {
-//            username.isNotBlank()
-//        }
-//    }
-
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }
 
-    inner class AccountCallback : AccountManagerCallback<Bundle> {
+    inner class AccountCallback(private val tokenType: String) : AccountManagerCallback<Bundle> {
         override fun run(future: AccountManagerFuture<Bundle>) {
             try {
                 val bundle = future.result
-                val authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN, null)
+                val authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN, null) ?: return
 
-                if (authToken != null) {
-                    authRepository.setToken(authToken)
-                    loginEvent.value = Event.success(authToken)
-                }
+                _accountRepository.setToken(authToken, tokenType)
+
+                loginEvent.value = Event.success(authToken, "Already logged")
 
             } catch (e: OperationCanceledException) {
                 e.printStackTrace()

@@ -14,7 +14,7 @@ val databaseModule = module {
 }
 
 fun provideRoomDatabase(context: Context): AppDatabase {
-    return Room.databaseBuilder(context, AppDatabase::class.java, "ansem.database")
+    return Room.databaseBuilder(context, AppDatabase::class.java, "ansem.sqlite")
 //        .fallbackToDestructiveMigration()
 //        .allowMainThreadQueries()
         .build()

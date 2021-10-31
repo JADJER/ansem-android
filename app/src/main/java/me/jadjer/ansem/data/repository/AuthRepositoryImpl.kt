@@ -1,58 +1,103 @@
 package me.jadjer.ansem.data.repository
 
-import android.accounts.Account
-import android.accounts.AccountManager
-import android.accounts.AccountManagerCallback
+import android.accounts.*
 import android.content.Context
+import android.os.Bundle
+import me.jadjer.ansem.data.ACCOUNT_TYPE
 import me.jadjer.ansem.data.AccountGeneral
+import me.jadjer.ansem.data.TOKEN_TYPE_ACCESS
+import me.jadjer.ansem.data.api.AuthApi
+import me.jadjer.ansem.data.model.api.LoginRequest
+import me.jadjer.ansem.data.model.api.LoginResponse
+import me.jadjer.ansem.data.model.api.RegisterRequest
+import me.jadjer.ansem.data.model.api.RegisterResponse
+import me.jadjer.ansem.utils.ResponseWrapper
 
-class AuthRepositoryImpl(context: Context) : AuthRepository {
+class AuthRepositoryImpl(val context: Context, private val authApi: AuthApi) :
+    AuthRepository {
 
-    private var _token: String = ""
-    private var _isAuth: Boolean = false
-    private var _isAdmin: Boolean = false
-    private val accountManager: AccountManager = AccountManager.get(context)
+    private var accountManager: AccountManager = AccountManager.get(context)
+    private var account: Account? = null
+    private var token: String? = null
 
-    override fun isAuth(): Boolean {
-        return _isAuth
-    }
-
-    override fun asAdmin(): Boolean {
-        return _isAdmin
-    }
-
-    override fun getToken(): String {
-//        val qwe = accountManager.getAuthTokenByFeatures(
-//            AccountGeneral.ACCOUNT_TYPE,
-//            AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
-//            null,
-//            null,
-//            null,
-//            null,
-//            AccountManagerCallback {
-//
-//            },
-//            null
-//        )
-
-
-//        val accounts = accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)
-//        for (account: Account in accounts) {
-//            account.
-//        }
-
-        return _token
-    }
-
-    override fun setToken(token: String) {
-        if (token.isEmpty()) {
-            _token = ""
-            _isAuth = false
-            _isAdmin = false
-
-        } else {
-            _token = token
-            _isAuth = true
+    override fun get(): Account? {
+        val accounts = accountManager.getAccountsByType(ACCOUNT_TYPE)
+        for (exist_account in accounts) {
+            account = exist_account
+            break
         }
+
+        return account
+    }
+
+    override fun get(username: String): Account? {
+        val accounts = accountManager.getAccountsByType(ACCOUNT_TYPE)
+        for (exist_account in accounts) {
+            if (exist_account.name == username) {
+                account = exist_account
+                break
+            }
+        }
+
+        return account
+    }
+
+    override suspend fun login(username: String, password: String): ResponseWrapper<LoginResponse> {
+        return authApi.login(
+            LoginRequest(username, password)
+        )
+    }
+
+    override suspend fun register(
+        username: String,
+        password: String,
+        first_name: String,
+        last_name: String,
+    ): ResponseWrapper<RegisterResponse> {
+        return authApi.register(
+            RegisterRequest(username, password, first_name, last_name)
+        )
+    }
+
+    override fun logout() {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAuthToken(): String? {
+        val future = accountManager.getAuthToken(
+            account,
+            TOKEN_TYPE_ACCESS,
+            null,
+            false,
+            null,
+            null
+        )
+        if (future.isCancelled) {
+            return null
+        }
+
+        if (!future.isDone) {
+            return null
+        }
+
+        token = future.result.getString(AccountManager.KEY_AUTHTOKEN).toString()
+
+        return token
+    }
+
+    private fun getToken(account: Account): String? {
+        var token: String? = null
+
+        accountManager.getAuthToken(account, "access", Bundle(), false, { future ->
+            if (!future.isDone && !future.isCancelled) {
+                return@getAuthToken
+            }
+
+            if (future.isDone) {
+                token = future.result.getString(AccountManager.KEY_AUTHTOKEN).toString()
+            }
+        }, null)
+
+        return token
     }
 }

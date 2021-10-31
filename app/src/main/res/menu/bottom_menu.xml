@@ -7,6 +7,11 @@
         android:title="@string/title_request_list" />
 
     <item
+        android:id="@+id/placeholder"
+        android:enabled="false"
+        android:title="" />
+
+    <item
         android:id="@+id/userProfileFragment"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/title_profile" />

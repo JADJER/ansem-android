@@ -31,4 +31,7 @@
     <string name="invalid_address">Не указан адрес</string>
     <string name="invalid_mobile_no">Не указан номер телефона</string>
     <string name="title_request_detail">Запрос</string>
+    <string name="action_request_delete">Удалить</string>
+    <string name="description_add_request">Добавить заявку</string>
+    <string name="title_request_create">Создать запрос</string>
 </resources>

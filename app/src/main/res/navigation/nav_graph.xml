@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_requestListFragment_to_requestDetailFragment"
             app:destination="@id/requestDetailFragment" />
+        <action
+            android:id="@+id/action_requestListFragment_to_requestCreateFragment"
+            app:destination="@id/requestCreateFragment" />
     </fragment>
     <fragment
         android:id="@+id/requestDetailFragment"
@@ -47,4 +50,9 @@
         app:destination="@id/loginFragment"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/requestCreateFragment"
+        android:name="me.jadjer.ansem.fragments.request_create.RequestCreateFragment"
+        android:label="fragment_request_create"
+        tools:layout="@layout/fragment_request_create" />
 </navigation>
