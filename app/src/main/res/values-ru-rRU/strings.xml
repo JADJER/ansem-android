@@ -34,4 +34,11 @@
     <string name="action_request_delete">Удалить</string>
     <string name="description_add_request">Добавить заявку</string>
     <string name="title_request_create">Создать запрос</string>
+    <string name="invalid_school">Не указано учебное заведение</string>
+    <string name="invalid_class">Не указан класс</string>
+    <string name="invalid_score">Не указан средний бал</string>
+    <string name="invalid_score_value">Значение должно быть от 0 до 10</string>
+    <string name="school">Школа</string>
+    <string name="class_no">Класс</string>
+    <string name="score">Средний бал</string>
 </resources>

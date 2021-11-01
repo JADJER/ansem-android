@@ -9,7 +9,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import me.jadjer.ansem.R
 import me.jadjer.ansem.databinding.ActivityMainBinding
 
@@ -30,9 +32,9 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
 
-        val bottomAppBar = binding.bottomAppBar
+        val bottomAppBar: BottomAppBar = binding.bottomAppBar
         val navView: BottomNavigationView = binding.navView
-        val fab = binding.fab
+        val fab: FloatingActionButton = binding.fab
 
         navController = navHostFragment.navController
         navController.setGraph(R.navigation.nav_graph)
@@ -67,7 +69,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

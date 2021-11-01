@@ -22,7 +22,7 @@ class AuthorizationInterceptor : Interceptor {
 
     private fun Request.signedRequest(): Request {
         val builder = newBuilder()
-        builder.header("x-api-key", "egHllmJBgBW0ygbQ4ixolDmTmGpF-vauRuGuyUuxQ8A")
+        builder.header("x-api-key", "qGQWJ0UcTg8Q7dVdKzGNuNhDw80--55rOw4Uuw6H3EY")
 
         val token = accountRepository.value.getToken()
         if (token != null) {

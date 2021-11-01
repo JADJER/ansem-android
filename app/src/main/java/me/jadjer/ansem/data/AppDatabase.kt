@@ -6,11 +6,11 @@ import me.jadjer.ansem.data.model.entity.*
 import me.jadjer.ansem.data.model.dao.*
 
 @Database(
-    entities = [RequestEntity::class, UserEntity::class],
+    entities = [RequestEntity::class, SessionEntity::class],
     version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun requestDao(): RequestDao
-    abstract fun userDao(): UserDao
+    abstract fun sessionDao(): SessionDao
 }

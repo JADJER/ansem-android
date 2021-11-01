@@ -8,5 +8,6 @@ data class Profile(
     val country: String = "",
     val city: String = "",
     val address: String = "",
-    val mobile_no: String = ""
+    val mobile_no: String = "",
+    val is_admin: Boolean = false
 )

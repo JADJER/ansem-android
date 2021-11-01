@@ -53,6 +53,6 @@
     <fragment
         android:id="@+id/requestCreateFragment"
         android:name="me.jadjer.ansem.fragments.request_create.RequestCreateFragment"
-        android:label="fragment_request_create"
+        android:label="@string/title_request_create"
         tools:layout="@layout/fragment_request_create" />
 </navigation>

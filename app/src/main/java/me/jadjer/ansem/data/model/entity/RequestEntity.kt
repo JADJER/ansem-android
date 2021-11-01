@@ -10,4 +10,5 @@ data class RequestEntity (
     val class_no: String,
     val score: Double,
     val index : Int,
+    val sessionId: Int
 )

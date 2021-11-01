@@ -8,6 +8,7 @@ val apiModule = module {
     single { provideAuthApiService(get()) }
     single { provideProfileApiService(get()) }
     single { provideRequestApiService(get()) }
+    single { provideSessionApiService(get()) }
 }
 
 fun provideAuthApiService(retrofit: Retrofit): AuthApi {
@@ -20,4 +21,8 @@ fun provideProfileApiService(retrofit: Retrofit): ProfileApi {
 
 fun provideRequestApiService(retrofit: Retrofit): RequestApi {
     return retrofit.create(RequestApi::class.java)
+}
+
+fun provideSessionApiService(retrofit: Retrofit): SessionApi {
+    return retrofit.create(SessionApi::class.java)
 }
